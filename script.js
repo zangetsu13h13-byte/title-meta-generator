@@ -1,28 +1,29 @@
-const API_KEY = "YOUR_GEMINI_API_KEY"; // replace with your real key
-
 document.getElementById("generateBtn").addEventListener("click", async () => {
-  const topic = document.getElementById("topic").value;
-  const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = "⏳ Generating...";
+  const topic = document.getElementById("topic").value.trim();
+  const output = document.getElementById("output");
+
+  if (!topic) {
+    output.innerHTML = "<p style='color:red'>⚠️ Please enter a topic.</p>";
+    return;
+  }
+
+  output.innerHTML = "<p>⏳ Generating...</p>";
 
   try {
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + API_KEY,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: `Generate 5 catchy blog titles and meta descriptions for this topic: ${topic}. Output in bullet points.` }] }
-          ]
-        })
-      }
-    );
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic })
+    });
 
     const data = await response.json();
-    const text = data.candidates[0].content.parts[0].text;
-    outputDiv.innerHTML = text.replace(/\n/g, "<br>");
+
+    if (data.text) {
+      output.innerHTML = `<p>${data.text}</p>`;
+    } else {
+      output.innerHTML = `<p style='color:red'>⚠️ Error: ${data.error}</p>`;
+    }
   } catch (err) {
-    outputDiv.innerHTML = "❌ Error: " + err.message;
+    output.innerHTML = "<p style='color:red'>⚠️ Failed to fetch response.</p>";
   }
 });
