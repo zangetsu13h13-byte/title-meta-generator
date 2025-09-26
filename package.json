@@ -1,0 +1,23 @@
+{
+  "name": "meta-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zangetsu13h13-byte/title-meta-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zangetsu13h13-byte/title-meta-generator/issues"
+  },
+  "homepage": "https://github.com/zangetsu13h13-byte/title-meta-generator#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
