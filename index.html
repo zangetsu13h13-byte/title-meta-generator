@@ -3,21 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog Title & Meta Description Generator</title>
+  <title>Title & Meta Generator — Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Blog Title & Meta Description Generator</h1>
-    <textarea id="topic" placeholder="Enter your blog topic..."></textarea>
-    <button id="generateBtn">Generate</button>
-    
-    <div id="results">
-      <h2>Results</h2>
-      <div id="output"></div>
-    </div>
-  </div>
+    <header>
+        <div class="header-content">
+            <span class="logo">TitlePro</span>
+            <button id="authBtn" class="primary-btn"></button>
+        </div>
+    </header>
 
-  <script src="script.js"></script>
+    <main class="container">
+        <div id="auth-gate" style="display: none;">
+            <h1>Access Locked: Please Sign In</h1>
+            <p>Sign in below to unlock your unlimited title and meta description ideas.</p>
+            <div class="auth-form">
+                <input type="email" placeholder="Email Address">
+                <input type="password" placeholder="Password">
+                <button id="loginBtn" class="primary-btn">Sign In / Sign Up</button>
+            </div>
+            <p class="mock-info">No real registration is required; this button saves your session locally.</p>
+        </div>
+
+        <div id="app-content" style="display: none;">
+            <h1>Title & Meta Description Generator</h1>
+            <textarea id="topic" placeholder="Enter your blog topic or main keyword here..."></textarea>
+            <button id="generateBtn" class="primary-btn">Generate Ideas</button>
+            
+            <div id="results">
+                <h2>Results</h2>
+                <div id="output"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 TitlePro. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
