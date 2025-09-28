@@ -1,9 +1,7 @@
 // --- CONFIGURATION: FILL IN YOUR KEYS HERE ---
-// NOTE: OpenRouter API Key is now being used securely in the Vercel serverless function, 
-// but Supabase keys are needed here for client-side data submission.
+// NOTE: These keys look correct and have been pulled from your uploaded file.
 const SUPABASE_URL = "https://bipvrqakcoswbcervejf.supabase.co"; 
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEYeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpcHZycWFrY29zd2JjZXJ2ZWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwNDMyOTIsImV4cCI6MjA3NDYxOTI5Mn0.e68_BQw8BdLazdMW-4G2Wrm_AhDpEwS-Dn55EwKyllI"; 
-
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpcHZycWFrY29zd2JjZXJ2ZWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwNDMyOTIsImV4cCI6MjA3NDYxOTI5Mn0.e68_BQw8BdLazdMW-4G2Wrm_AhDpEwS-Dn55EwKyllI";
 
 // --- MOCK AUTHENTICATION LOGIC ---
 const authGate = document.getElementById('auth-gate');
@@ -56,7 +54,7 @@ async function handleLogin() {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_ANON_KEY,
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                'Prefer': 'return=minimal' // Reduces network traffic
+                'Prefer': 'return=minimal' 
             },
             body: JSON.stringify({ email: email })
         });
@@ -69,12 +67,15 @@ async function handleLogin() {
             alert(`Success! Thanks for signing up, ${email}. The tool is unlocked.`);
             location.reload(); 
         } else {
+            // Log the error response text for debugging
             console.error('Supabase Error:', await response.text());
             alert('Sign up failed. Please check console or try again.');
         }
     } catch (error) {
         console.error('Network Error:', error);
         alert('Could not connect to the sign-up service. Check your Supabase URL/Key.');
+    } finally {
+        // Ensure button state is reset if function fails before reload
         loginBtn.textContent = "Sign Up & Unlock Tool";
         loginBtn.disabled = false;
     }
@@ -123,7 +124,7 @@ function setupGenerator() {
                 output.innerHTML = `<p style="color:red">⚠️ AI Error: ${data.error || 'Check Vercel logs for OpenRouter key status.'}</p>`;
             }
         } catch (err) {
-            output.innerHTML = "<p style='color:red'>⚠️ Failed to connect to the server. Try refreshing.</p>";
+            output.innerHTML = "<p style='color:red'>⚠️ Failed to connect to the server. Try refreshing or check Vercel logs.</p>";
         }
     });
 }
