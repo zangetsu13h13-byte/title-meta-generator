@@ -48,7 +48,7 @@ async function handleLogin() {
 
     try {
         // --- DATA COLLECTION STEP: Save the email to Supabase ---
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/users?schema=public`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
