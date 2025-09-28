@@ -1,8 +1,8 @@
 // --- CONFIGURATION: FILL IN YOUR KEYS HERE ---
 // NOTE: OpenRouter API Key is now being used securely in the Vercel serverless function, 
 // but Supabase keys are needed here for client-side data submission.
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
+const SUPABASE_URL = "https://bipvrqakcoswbcervejf.supabase.co"; 
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEYeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpcHZycWFrY29zd2JjZXJ2ZWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwNDMyOTIsImV4cCI6MjA3NDYxOTI5Mn0.e68_BQw8BdLazdMW-4G2Wrm_AhDpEwS-Dn55EwKyllI"; 
 
 
 // --- MOCK AUTHENTICATION LOGIC ---
