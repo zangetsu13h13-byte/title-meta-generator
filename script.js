@@ -1,3 +1,10 @@
+// --- CONFIGURATION: FILL IN YOUR KEYS HERE ---
+// NOTE: OpenRouter API Key is now being used securely in the Vercel serverless function, 
+// but Supabase keys are needed here for client-side data submission.
+const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
+
+
 // --- MOCK AUTHENTICATION LOGIC ---
 const authGate = document.getElementById('auth-gate');
 const appContent = document.getElementById('app-content');
@@ -15,24 +22,17 @@ function checkAuthStatus() {
         appContent.style.display = 'block';
         authBtn.textContent = 'Sign Out';
         authBtn.onclick = handleLogout;
-        setupGenerator();
+        setupGenerator(); // Start the generator functions
     } else {
         // User is logged out: SHOW LOGIN GATE
         document.title = "Sign In Required";
         authGate.style.display = 'block';
         appContent.style.display = 'none';
         authBtn.textContent = 'Sign In';
-        authBtn.onclick = () => { /* Prevent action on main button click */ };
+        authBtn.onclick = () => { /* No action on sign in click */ };
         loginBtn.onclick = handleLogin;
     }
 }
-
-function handleLogin() {
-// Add these two constants at the very top of your script.js file, 
-// replacing the placeholders with your actual keys from Step 1.
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; 
-
 
 async function handleLogin() {
     const emailInput = document.getElementById('userEmail');
@@ -44,40 +44,42 @@ async function handleLogin() {
         return;
     }
 
+    // Set temporary state for user experience
+    loginBtn.textContent = "Saving...";
+    loginBtn.disabled = true;
+
     try {
-        // --- DATA COLLECTION STEP ---
-        // This attempts to save the email to your Supabase 'users' table
+        // --- DATA COLLECTION STEP: Save the email to Supabase ---
         const response = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Prefer': 'return=minimal' // Reduces network traffic
             },
             body: JSON.stringify({ email: email })
         });
 
+        // 201 (Created) or 409 (Conflict/Already Exists) are both success states for us.
         if (response.status === 201 || response.status === 409) {
-            // 201 is success (new user saved)
-            // 409 is conflict (user already exists in DB), which is also a success for us!
             
             // --- MOCK LOGIN SUCCESS ---
             localStorage.setItem('isLoggedIn', 'true');
-            alert(`Thanks for signing up, ${email}! You are now logged in.`);
+            alert(`Success! Thanks for signing up, ${email}. The tool is unlocked.`);
             location.reload(); 
         } else {
             console.error('Supabase Error:', await response.text());
-            alert('Sign up failed due to a database error. Please try again.');
+            alert('Sign up failed. Please check console or try again.');
         }
     } catch (error) {
         console.error('Network Error:', error);
-        alert('Could not connect to the sign-up service. Please check your connection.');
+        alert('Could not connect to the sign-up service. Check your Supabase URL/Key.');
+        loginBtn.textContent = "Sign Up & Unlock Tool";
+        loginBtn.disabled = false;
     }
 }
-// Note: You must remove the 'setupGenerator()' call from the setupGenerator function 
-// since it is now being called inside of checkAuthStatus().
-// Ensure you still call checkAuthStatus() at the end of the script:
-// checkAuthStatus();
+
 
 function handleLogout() {
     // Clear the local login state
@@ -85,10 +87,6 @@ function handleLogout() {
     // Reload the page to show the login view
     location.reload();
 }
-
-// --- GENERATOR LOGIC (Same functional template code) ---
-function setupGenerator() {
-    // ... (Keep all the mock auth functions: checkAuthStatus, handleLogin, handleLogout) ...
 
 // --- API GENERATOR LOGIC ---
 function setupGenerator() {
@@ -101,10 +99,10 @@ function setupGenerator() {
             return;
         }
 
-        output.innerHTML = "<p>⏳ Generating content with AI...</p>"; // New message
+        output.innerHTML = "<p>⏳ Generating content with AI...</p>";
 
         try {
-            // Call the Vercel Serverless Function
+            // Call the Vercel Serverless Function (using the OpenRouter key set in Vercel)
             const response = await fetch("/api/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -114,7 +112,7 @@ function setupGenerator() {
             const data = await response.json();
 
             if (data.text) {
-                // Display AI results directly (using simple pre-formatting)
+                // Display AI results
                 output.innerHTML = `
                     <div class="result-box" style="white-space: pre-wrap;">
                         ${data.text}
@@ -122,31 +120,11 @@ function setupGenerator() {
                 `;
             } else {
                 // Display error from server function
-                output.innerHTML = `<p style="color:red">⚠️ AI Error: ${data.error || 'Check Vercel logs for details.'}</p>`;
+                output.innerHTML = `<p style="color:red">⚠️ AI Error: ${data.error || 'Check Vercel logs for OpenRouter key status.'}</p>`;
             }
         } catch (err) {
             output.innerHTML = "<p style='color:red'>⚠️ Failed to connect to the server. Try refreshing.</p>";
         }
-    });
-}
-
-// Start the application by checking the auth status
-checkAuthStatus();
-        ];
-
-        let htmlOutput = "";
-
-        templates.forEach((item, index) => {
-            htmlOutput += `
-                <div class="result-box">
-                    <h4>Idea ${index + 1}:</h4>
-                    <p><strong>Title:</strong> ${item.title}</p>
-                    <p><strong>Meta Description:</strong> ${item.meta}</p>
-                </div>
-            `;
-        });
-
-        output.innerHTML = htmlOutput;
     });
 }
 
