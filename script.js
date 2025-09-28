@@ -88,7 +88,11 @@ function handleLogout() {
 
 // --- GENERATOR LOGIC (Same functional template code) ---
 function setupGenerator() {
-    generateBtn.addEventListener("click", () => {
+    // ... (Keep all the mock auth functions: checkAuthStatus, handleLogin, handleLogout) ...
+
+// --- API GENERATOR LOGIC ---
+function setupGenerator() {
+    generateBtn.addEventListener("click", async () => {
         const topic = document.getElementById("topic").value.trim();
         const output = document.getElementById("output");
 
@@ -97,25 +101,37 @@ function setupGenerator() {
             return;
         }
 
-        output.innerHTML = "<h3>Generating...</h3>";
+        output.innerHTML = "<p>⏳ Generating content with AI...</p>"; // New message
 
-        // --- TEMPLATE LOGIC ---
-        const templates = [
-            // 1. Title focused on SEO/list
-            {
-                title: `10 Best Tips for Mastering ${topic} in 2025`,
-                meta: `Learn the essential 10 tips to master ${topic}. Boost your skills and efficiency with this comprehensive guide for beginners and experts.`
-            },
-            // 2. Title focused on question/solution
-            {
-                title: `Is ${topic} Worth Your Time? (The Complete Guide)`,
-                meta: `Everything you need to know about ${topic}. We break down the costs, benefits, and why it might be the solution you're looking for.`
-            },
-            // 3. Title focused on speed/results
-            {
-                title: `How to Implement ${topic} in Under 30 Minutes`,
-                meta: `A step-by-step tutorial on quickly implementing ${topic}. Achieve fast results without wasting time on complicated setups.`
+        try {
+            // Call the Vercel Serverless Function
+            const response = await fetch("/api/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic: topic })
+            });
+
+            const data = await response.json();
+
+            if (data.text) {
+                // Display AI results directly (using simple pre-formatting)
+                output.innerHTML = `
+                    <div class="result-box" style="white-space: pre-wrap;">
+                        ${data.text}
+                    </div>
+                `;
+            } else {
+                // Display error from server function
+                output.innerHTML = `<p style="color:red">⚠️ AI Error: ${data.error || 'Check Vercel logs for details.'}</p>`;
             }
+        } catch (err) {
+            output.innerHTML = "<p style='color:red'>⚠️ Failed to connect to the server. Try refreshing.</p>";
+        }
+    });
+}
+
+// Start the application by checking the auth status
+checkAuthStatus();
         ];
 
         let htmlOutput = "";
